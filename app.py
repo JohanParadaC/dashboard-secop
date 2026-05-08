@@ -10,7 +10,7 @@ st.markdown("""
     <style>
     [data-testid="stMetricValue"] { font-size: 28px; }
     </style>
-    """, unsafe_allow_stdio=True)
+    """, unsafe_allow_html=True)
 
 st.title("📊 Análisis de Contratación Estatal - Resultados Finales")
 st.markdown("---")
