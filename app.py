@@ -4,17 +4,19 @@ import polars as pl
 st.set_page_config(page_title="Dashboard SECOP II", layout="wide")
 st.title("📊 Análisis de Contratación (Respuestas 1 a 17)")
 
-# Carga y limpieza
+# Carga y limpieza usando el archivo Parquet optimizado
 @st.cache_data
 def load_data():
-    df = pl.read_csv('SECOP_II.csv', infer_schema_length=0)
+    # Leemos el archivo Parquet comprimido en lugar del CSV gigante
+    df = pl.read_parquet('secop.parquet')
+    
     # Convertimos los valores financieros a números reales (quitando comas)
     df = df.with_columns(
         pl.col('Valor del Contrato').str.replace_all(',', '').cast(pl.Float64, strict=False)
     )
     return df
 
-with st.spinner("Procesando base de datos (1.6GB)..."):
+with st.spinner("Procesando base de datos..."):
     df = load_data()
 
 st.success("¡Datos cargados!")
