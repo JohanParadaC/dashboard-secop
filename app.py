@@ -7,8 +7,8 @@ st.title("📊 Análisis de Contratación (Respuestas 1 a 17)")
 # Carga y limpieza usando el archivo Parquet optimizado
 @st.cache_data
 def load_data():
-    # Leemos el archivo Parquet comprimido en lugar del CSV gigante
-    df = pl.read_parquet('secop.parquet')
+    # Leemos el archivo Parquet de muestra en lugar del corrupto
+    df = pl.read_parquet('datos_muestra.parquet')
     
     # Convertimos los valores financieros a números reales (quitando comas)
     df = df.with_columns(
@@ -91,7 +91,7 @@ st.code("; ".join(res_10))
 # Pregunta 11 y 12
 st.subheader("11 y 12. Top 5 Tipos de contrato")
 tipos = df.group_by('Tipo de Contrato').len().sort('len', descending=True).head(5)
-st.dataframe(tipos, use_container_width=True)
+st.dataframe(tipos, width="stretch")
 tipo_frecuente = tipos['len'][0]
 st.write(f"**Respuesta 12:** El tipo de contrato con mayor frecuencia representa el **{(tipo_frecuente / num_registros) * 100:.2f}%** del total.")
 
@@ -137,5 +137,5 @@ genero = df.group_by('Género Representante Legal').agg([
     pl.len().alias('Cantidad de Contratos'),
     pl.col('Valor del Contrato').sum().alias('Dinero Adjudicado ($)')
 ]).sort('Dinero Adjudicado ($)', descending=True)
-st.dataframe(genero, use_container_width=True)
+st.dataframe(genero, width="stretch")
 st.write("👆 **Sustento Cuantitativo:** Revisa la tabla superior. Si el valor adjudicado a hombres supera ampliamente al de las mujeres, existe una clara brecha financiera.")
